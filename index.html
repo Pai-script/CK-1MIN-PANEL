@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIP ACCESS PANEL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neon-blue: #0ff0fc;
+            --neon-pink: #ff2a6d;
+            --dark-bg: #0a0a1a;
+            --panel-bg: rgba(10, 10, 26, 0.9);
+        }
+        
+        body {
+            background: var(--dark-bg);
+            color: white;
+            font-family: 'Orbitron', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+        
+        .login-container, .panel-container {
+            background: var(--panel-bg);
+            border-radius: 10px;
+            padding: 30px;
+            width: 320px;
+            box-shadow: 0 0 20px rgba(0, 240, 252, 0.3);
+            border: 1px solid var(--neon-blue);
+        }
+        
+        .watermark {
+            color: rgb(80, 80, 80);
+        }
+        .panel-container {
+            display: none;
+        }
+        
+        h1 {
+            color: var(--neon-blue);
+            margin-bottom: 30px;
+            text-shadow: 0 0 10px var(--neon-blue);
+        }
+        
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1em;
+            background: transparent;
+            color: var(--neon-blue);
+            border: 1px solid var(--neon-blue);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn:hover {
+            background: var(--neon-blue);
+            color: var(--dark-bg);
+            box-shadow: 0 0 15px var(--neon-blue);
+        }
+        
+        .btn-contact {
+            border-color: var(--neon-pink);
+            color: var(--neon-pink);
+        }
+        
+        .btn-contact:hover {
+            background: var(--neon-pink);
+            color: var(--dark-bg);
+            box-shadow: 0 0 15px var(--neon-pink);
+        }
+        
+        .key-input {
+            padding: 12px 15px;
+            width: 90%;
+            margin-bottom: 0px;
+            background: rgba(5, 5, 16, 0.7);
+            border: 1px solid var(--neon-blue);
+            color: white;
+            border-radius: 5px;
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .error-message {
+            color: var(--neon-pink);
+            margin-top: 10px;
+            display: none;
+        }
+        
+        .title {
+            font-size: 30px;
+            text-shadow: #ffffff;
+            box-shadow: 0 0 20px var(--neon-pink);
+            border-radius: 8px;
+            background-color: var(--neon-pink);
+
+
+        }
+            
+        
+        
+        .timer-box {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--dark-bg);
+            backdrop-filter: blur(50px);
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid var(--neon-blue);
+            box-shadow: 0 0 20px var(--neon-blue);
+            z-index: 100;
+            width: 300px;
+        }
+        
+        .timer-display {
+            font-size: 1.5em;
+            margin: 15px 0;
+            color: var(--neon-blue);
+        }
+        
+        .prediction {
+            font-size: 2em;
+            font-weight: bold;
+            margin: 20px 0;
+            color: var(--neon-pink);
+            text-shadow: 0 0 10px var(--neon-pink);
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: var(--neon-pink);
+            font-size: 1.2em;
+            cursor: pointer;
+            
+        }
+        .close-btn:hover {
+            background: var(--neon-pink);
+            color: var(--dark-bg);
+            box-shadow: 0 0 15px var(--neon-pink);
+            transition: 0.5s;
+            border-radius: 8px;
+            
+        }
+    </style>
+</head>
+<body>
+    <!-- Audio elements (hidden) -->
+    <audio id="activateSound" src="https://cdn.pixabay.com/audio/2022/03/15/audio_2b2ba4de45.mp3" preload="auto"></audio>
+    <audio id="launchSound" src="https://cdn.pixabay.com/audio/2022/03/17/audio_751f0261c5.mp3" preload="auto"></audio>
+    
+    <!-- Login Page -->
+    <div id="loginPage" class="login-container">
+        <h1>VIP ACCESS PANEL</h1>
+        <input type="password" class="key-input" id="keyInput" placeholder="ENTER ACCESS KEY">
+        <button class="btn" onclick="checkKey()">ACTIVATE</button>
+        <button class="btn btn-contact" onclick="contactForKey()">CONTACT FOR KEY</button>
+        <div class="error-message" id="errorMessage">INVALID KEY - Contact @leostrike223</div>
+        <div class="watermark">Developed by Pai</div>
+    </div>
+    <!-- Main Panel (hidden until login) -->
+    <div id="mainPanel" class="panel-container">
+        <h1>SYSTEM ONLINE</h1>
+        <button class="btn" onclick="showTimerBox()">LAUNCH SEQUENCE</button>
+    </div>
+    
+    <!-- Timer Box (hidden until launched) -->
+    <div id="timerBox" class="timer-box">
+        <button class="close-btn" onclick="hideTimerBox()">✕</button>
+        <h2 class="title">CK WINGO 1MIN</h2>
+        <div class="timer-display" id="periodDisplay"></div>
+        <div class="timer-display" id="timeDisplay"></div>
+        <div class="prediction" id="prediction"></div>
+        <small>USE AT YOUR OWN RISK</small>
+        <div class="watermark">Developed by Pai</div>
+    </div>
+
+    <script>
+        // Audio elements
+        const activateSound = document.getElementById('activateSound');
+        const launchSound = document.getElementById('launchSound');
+        
+        // Login Functions
+        function checkKey() {
+            // Play activate sound
+            activateSound.currentTime = 0;
+            activateSound.play();
+            
+            const keyInput = document.getElementById('keyInput').value;
+            const errorMessage = document.getElementById('errorMessage');
+            
+            if (keyInput === 'PAIHACKVIP') {
+                document.getElementById('loginPage').style.display = 'none';
+                document.getElementById('mainPanel').style.display = 'block';
+                errorMessage.style.display = 'none';
+            } else {
+                errorMessage.style.display = 'block';
+            }
+        }
+        
+        function contactForKey() {
+            window.open('https://t.me/leostrike223', '_blank');
+        }
+        
+        // Timer Box Functions
+        function showTimerBox() {
+            // Play launch sound
+            launchSound.currentTime = 0;
+            launchSound.play();
+            
+            document.getElementById('timerBox').style.display = 'block';
+            startTimer();
+        }
+        
+        function hideTimerBox() {
+            document.getElementById('timerBox').style.display = 'none';
+            clearInterval(timerInterval);
+            timerInterval = null;
+        }
+        
+        // Timer Functions
+        let timerInterval = null;
+        
+        function startTimer() {
+            let lastMinute = -1;
+            timerInterval = setInterval(() => {
+                const now = new Date();
+                const seconds = now.getUTCSeconds();
+                const remainingSeconds = 60 - seconds;
+                const minutes = now.getUTCMinutes();
+                const hours = now.getUTCHours();
+                const totalMinutes = hours * 60 + minutes;
+                
+                // Generate prediction at start of each minute
+                if (seconds === 0 && lastMinute !== minutes) {
+                    const prediction = Math.random() > 0.5 ? 'BIG' : 'SMALL';
+                    document.getElementById('prediction').textContent = prediction;
+                    lastMinute = minutes;
+                }
+                
+                // Update period display
+                const year = now.getUTCFullYear();
+                const month = String(now.getUTCMonth() + 1).padStart(2, '0');
+                const day = String(now.getUTCDate()).padStart(2, '0');
+                const periodNumber = `${year}${month}${day}1000${10001 + totalMinutes}`;
+                document.getElementById('periodDisplay').textContent = `PERIOD: ${periodNumber}`;
+                
+                // Update time display
+                document.getElementById('timeDisplay').textContent = `TIME: 00:${String(remainingSeconds).padStart(2, '0')}`;
+            }, 1000);
+        }
+        
+        // Handle Enter key press
+        document.getElementById('keyInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkKey();
+            }
+        });
+    </script>
+</body>
+</html>
